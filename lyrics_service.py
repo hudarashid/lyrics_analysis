@@ -83,7 +83,6 @@ class LyricsService:
     ) -> tuple[int, list[tuple[str, int]], dict[str, int]]:
         # Split the string by commas, parentheses, question marks, double quotes, exclamation marks, spaces
         words_list = re.split(r'[,"\s()\?!]+', formatted_lyrics)
-        print(f"\n\n ==>> words_list: {words_list}")
 
         count = len(words_list)
 

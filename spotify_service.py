@@ -73,7 +73,6 @@ class SpotifyService:
         session = requests.Session()
 
         cookies = {"sp_dc": dc, "sp_key": key}
-        LOGGER.debug(f"\n\n ==>> ACCESS_TOKEN_URL: {ACCESS_TOKEN_URL}")
         response = session.get(ACCESS_TOKEN_URL, cookies=cookies)
         response.raise_for_status()
         data = response.content.decode("utf-8")

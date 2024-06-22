@@ -116,13 +116,13 @@ if not st.session_state.get("FormSubmitter:search_form-Search"):
                     combined_lyrics
                 )
 
-                word_count, most_common, char_counts = lyric_service.count_most_common(
-                    "\n".join(combined_lyrics.values())
+                word_count, most_common, char_counts, unique_words = (
+                    lyric_service.count_most_common("\n".join(combined_lyrics.values()))
                 )
 
                 card(
                     title=f"{st.session_state.get(f'{key}_track_name')}",
-                    text="Song by" + f"{st.session_state.get(f'{key}_artist')}",
+                    text="Song by " + f"{st.session_state.get(f'{key}_artist')}",
                     image=f"{st.session_state.get(f'{key}_album_image')}",
                     styles={"card": {"pointer-events": "none"}},
                 )
@@ -138,17 +138,21 @@ if not st.session_state.get("FormSubmitter:search_form-Search"):
                 else:
                     st.subheader(f"Word Counts: {word_count}", divider="rainbow")
 
-                st.subheader(f"Word Cloud")
-
+                st.subheader(
+                    f"Word Cloud for top 10 most repeated words:", divider="rainbow"
+                )
                 word_cloud_fig = lyric_service.create_word_cloud(most_common)
                 st.pyplot(word_cloud_fig)
 
-                st.divider()
-
-                st.subheader(f"Top 10 most repeated words:", divider="rainbow")
                 df = pd.DataFrame(most_common, columns=["Word", "Count"])
                 df.index = range(1, len(df) + 1)
                 st.dataframe(df.style.hide(axis="index"))
+
+                st.subheader(f"Word Cloud for unique words", divider="rainbow")
+                unique_word_cloud_fig = lyric_service.create_word_cloud(
+                    {word: 1 for word in unique_words}
+                )
+                st.pyplot(unique_word_cloud_fig)
 
                 st.subheader(f"Most repeated phrases:", divider="rainbow")
                 df = pd.DataFrame(

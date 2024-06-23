@@ -180,25 +180,25 @@ else:
 st.divider()
 footer = """<style>
 a:link , a:visited{
-color: grey;
-background-color: transparent;
-text-decoration: underline;
+    color: grey;
+    background-color: transparent;
+    text-decoration: underline;
 }
 
 a:hover,  a:active {
-color: red;
-background-color: transparent;
-text-decoration: underline;
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
 }
 
 .footer {
-position: fixed;
-left: 0;
-bottom: 0;
-width: 100%;
-color: grey;
-background-color: black;
-text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: grey;
+    background-color: black;
+    text-align: center;
 }
 </style>
 <div class="footer">

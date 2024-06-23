@@ -24,7 +24,7 @@ spotify = SpotifyService(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
 lyric_service = LyricsService()
 
 st.title(f"Song Lyrics Analysis")
-st.write(f"Search for any song title, artist name, or album.")
+st.write(f"Search for any track title, artist(s) name, or album.")
 st.write(
     f"If the song lyrics are available, an analysis will be provided including word count, the top 10 most repeated words, unique words that appear only once, and phrases that are repeated multiple times."
 )

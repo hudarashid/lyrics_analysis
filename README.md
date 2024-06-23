@@ -1,4 +1,4 @@
-# Song Lyrics Analysis
+# [Song Lyrics Analysis](https://lyricsanalysis.streamlit.app/)
 
 ### Motivation
 This project is inspired by a recent study indicating that song lyrics are becoming increasingly simpler and more repetitive. For more details, refer to the [Scientific American article](https://www.scientificamerican.com/article/song-lyrics-really-are-getting-simpler-and-more-repetitive-study-finds/).

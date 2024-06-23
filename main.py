@@ -23,7 +23,12 @@ SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 spotify = SpotifyService(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
 lyric_service = LyricsService()
 
-st.title(f"Lyrics Analysis")
+st.title(f"Song Lyrics Analysis")
+st.write(f"Search for any song title, artist name, or album.")
+st.write(
+    f"If the song lyrics are available, an analysis will be provided including word count, the top 10 most repeated words, unique words that appear only once, and phrases that are repeated multiple times."
+)
+
 
 search_form = st.form("search_form", clear_on_submit=True)
 container = st.container(border=True)
@@ -116,9 +121,13 @@ if not st.session_state.get("FormSubmitter:search_form-Search"):
                     combined_lyrics
                 )
 
-                word_count, most_common, char_counts, unique_words = (
-                    lyric_service.count_most_common("\n".join(combined_lyrics.values()))
-                )
+                (
+                    word_count,
+                    most_common,
+                    char_counts,
+                    unique_words,
+                    unique_words_count,
+                ) = lyric_service.count_most_common("\n".join(combined_lyrics.values()))
 
                 card(
                     title=f"{st.session_state.get(f'{key}_track_name')}",
@@ -148,7 +157,9 @@ if not st.session_state.get("FormSubmitter:search_form-Search"):
                 df.index = range(1, len(df) + 1)
                 st.dataframe(df.style.hide(axis="index"))
 
-                st.subheader(f"Word Cloud for unique words", divider="rainbow")
+                st.subheader(f"Word Cloud for Unique words", divider="rainbow")
+                st.write(f"These are the words that appear only once in the track.")
+                st.write(f"Unique words count: {unique_words_count} words")
                 unique_word_cloud_fig = lyric_service.create_word_cloud(
                     {word: 1 for word in unique_words}
                 )
@@ -164,3 +175,34 @@ if not st.session_state.get("FormSubmitter:search_form-Search"):
 
 else:
     LOGGER.debug("FormSubmitter:search_form-Search is not True")
+
+
+st.divider()
+footer = """<style>
+a:link , a:visited{
+color: grey;
+background-color: transparent;
+text-decoration: underline;
+}
+
+a:hover,  a:active {
+color: red;
+background-color: transparent;
+text-decoration: underline;
+}
+
+.footer {
+position: fixed;
+left: 0;
+bottom: 0;
+width: 100%;
+color: grey;
+background-color: black;
+text-align: center;
+}
+</style>
+<div class="footer">
+<p>Developed by <a style='text-align: center;' href="https://www.hudarashid.com/" target="_blank">Huda Rashid</a>. Found bugs? Report here at <a style='text-align: center;' href="https://github.com/hudarashid/lyrics_analysis/issues" target="_blank">Github</a>.</p>
+</div>
+"""
+st.markdown(footer, unsafe_allow_html=True)

@@ -92,6 +92,7 @@ class LyricsService:
         unique_words = [
             word for word, count in Counter(words_list).items() if count == 1
         ]
+        unique_words_count = len(unique_words)
         LOGGER.debug(f"Unique words: {unique_words}")
 
         # Regular expressions to detect Korean, Chinese, and Japanese characters
@@ -119,7 +120,7 @@ class LyricsService:
         # Filter out languages with zero counts
         char_counts = {k: v for k, v in char_counts.items() if v > 0}
 
-        return count, counter, char_counts, unique_words
+        return count, counter, char_counts, unique_words, unique_words_count
 
     def create_word_cloud(self, word_count):
         word_freq = dict(word_count)

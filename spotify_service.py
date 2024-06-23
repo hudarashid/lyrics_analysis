@@ -87,7 +87,3 @@ class SpotifyService:
 
 if __name__ == "__main__":
     spotify = SpotifyService(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET)
-    track = "yellow"
-    artist = "coldplay"
-
-    search = spotify.search(track=track, artist=artist)

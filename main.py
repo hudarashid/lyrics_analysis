@@ -4,6 +4,7 @@ import os
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
+from datetime import datetime
 from streamlit_card import card
 
 from lyrics_service import LyricsService
@@ -111,6 +112,9 @@ if not st.session_state.get("FormSubmitter:search_form-Search"):
             result = lyric_service.get_lyrics(key)
 
             if not result:
+                LOGGER.debug(
+                    f"No lyrics found for track _**{st.session_state.get(f'{key}_track_name')}**_."
+                )
                 st.error(
                     f"No lyrics found for track _**{st.session_state.get(f'{key}_track_name')}**_."
                 )
@@ -134,6 +138,9 @@ if not st.session_state.get("FormSubmitter:search_form-Search"):
                     text="Song by " + f"{st.session_state.get(f'{key}_artist')}",
                     image=f"{st.session_state.get(f'{key}_album_image')}",
                     styles={"card": {"pointer-events": "none"}},
+                )
+                LOGGER.info(
+                    f"Search for title: {st.session_state.get(f'{key}_track_name')} by {st.session_state.get(f'{key}_artist')} at {datetime.now()}"
                 )
 
                 if char_counts:

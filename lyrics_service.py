@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from lingua import Language, LanguageDetectorBuilder
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-from spotify_service import SpotifyService
+from SpotifyService.spotify_service import SpotifyService
 from streamlit.logger import get_logger
 
 

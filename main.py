@@ -8,7 +8,7 @@ from datetime import datetime
 from streamlit_card import card
 
 from lyrics_service import LyricsService
-from spotify_service import SpotifyService
+from SpotifyService.spotify_service import SpotifyService
 
 from streamlit.logger import get_logger
 

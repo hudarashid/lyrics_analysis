@@ -42,6 +42,7 @@ class SpotifyService:
             query_list.append(f"album:{album}")
 
         query_string = " ".join(query_list)
+        print(f"\n\n ==>> query_string: {query_string}")
 
         return query_string
 

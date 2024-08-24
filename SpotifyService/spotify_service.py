@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+from typing import List
 
 import requests
 import spotipy
@@ -8,6 +9,8 @@ import streamlit as st
 from dotenv import load_dotenv
 from spotipy.oauth2 import SpotifyClientCredentials
 from streamlit.logger import get_logger
+
+from SpotifyService.schemas import ConstructQueryInput, SpotifySearchResult
 
 LOGGER = get_logger(__file__)
 LOGGER.setLevel(logging.DEBUG)
@@ -29,36 +32,35 @@ class SpotifyService:
             )
         )
 
-    def _construct_query(
-        self, track: str = None, artist: str = None, album: str = None
-    ):
+    def _construct_query(self, input_query: ConstructQueryInput) -> str:
         query_list = []
 
-        if track:
-            query_list.append(f"track:{track}")
-        if artist:
-            query_list.append(f"artist:{artist}")
-        if album:
-            query_list.append(f"album:{album}")
+        if input_query.track:
+            query_list.append(f"track:{input_query.track}")
+        if input_query.artist:
+            query_list.append(f"artist:{input_query.artist}")
+        if input_query.album:
+            query_list.append(f"album:{input_query.album}")
 
         query_string = " ".join(query_list)
-        print(f"\n\n ==>> query_string: {query_string}")
 
         return query_string
 
     @st.cache_data
     def search(
         _self, track: str = None, artist: str = None, album: str = None, limit: int = 10
-    ):
+    ) -> List[SpotifySearchResult]:
 
-        query_string = _self._construct_query(track, artist, album)
+        query_input = ConstructQueryInput(track=track, artist=artist, album=album)
+
+        query_string = _self._construct_query(query_input)
         results = _self.sp.search(q=query_string, limit=limit)
 
         search_results = []
 
         for idx, track in enumerate(results["tracks"]["items"]):
             artist_names = [artist["name"] for artist in track["artists"]]
-            track_info = dict(
+            track_info = SpotifySearchResult(
                 track_name=track["name"],
                 artist=", ".join(artist_names),
                 album_image=track["album"]["images"][0]["url"],

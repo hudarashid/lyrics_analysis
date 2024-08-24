@@ -1,5 +1,6 @@
 import logging
 import os
+from typing import List
 
 import pandas as pd
 import streamlit as st
@@ -7,6 +8,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 from streamlit_card import card
 
+from SpotifyService.schemas import SpotifySearchResult
 from lyrics_service import LyricsService
 from SpotifyService.spotify_service import SpotifyService
 
@@ -54,7 +56,7 @@ if submitted:
         )
 
     else:
-        search_results = spotify.search(
+        search_results: List[SpotifySearchResult] = spotify.search(
             track=track_input, artist=artists_input, album=album_input
         )
 
@@ -74,10 +76,10 @@ if submitted:
 
         # Initialize session state for each track
         for index, result in enumerate(search_results):
-            track_id = result["id"]
-            track_name = result["track_name"]
-            album_image = result["album_image"]
-            artist = result["artist"]
+            track_id = result.id
+            track_name = result.track_name
+            album_image = result.album_image
+            artist = result.artist
             if track_id not in st.session_state:
                 st.session_state[track_id] = track_name
                 st.session_state[f"{track_id}_track_name"] = track_name
@@ -88,18 +90,18 @@ if submitted:
             if index % 2 == 0:
                 with col1:
                     card_result = card(
-                        title=result["track_name"],
-                        text=f"Song by {result['artist']}",
-                        image=result["album_image"],
-                        key=result["id"],
+                        title=track_name,
+                        text=f"Song by {artist}",
+                        image=album_image,
+                        key=track_id,
                     )
             else:
                 with col2:
                     card_result = card(
-                        title=result["track_name"],
-                        text=f"Song by {result['artist']}",
-                        image=result["album_image"],
-                        key=result["id"],
+                        title=track_name,
+                        text=f"Song by {artist}",
+                        image=album_image,
+                        key=track_id,
                     )
 
 

@@ -1,5 +1,6 @@
 import pytest
 from unittest.mock import Mock, patch
+from SpotifyService.schemas import ConstructQueryInput
 from SpotifyService.spotify_service import (
     SpotifyService,
 )
@@ -25,38 +26,47 @@ def test_spotify_service_initialization(mock_credentials, mock_spotify):
 
 
 @pytest.mark.parametrize(
-    "track, artist, album, expected_query",
+    "input_query, expected_query",
     [
         (
-            "Bohemian Rhapsody",
-            "Queen",
-            "A Night at the Opera",
+            {
+                "track": "Bohemian Rhapsody",
+                "artist": "Queen",
+                "album": "A Night at the Opera",
+            },
             "track:Bohemian Rhapsody artist:Queen album:A Night at the Opera",
         ),
-        ("Imagine", "John Lennon", None, "track:Imagine artist:John Lennon"),
-        (None, "The Beatles", "Abbey Road", "artist:The Beatles album:Abbey Road"),
-        ("Yesterday", None, None, "track:Yesterday"),
-        (None, None, None, ""),
+        (
+            {"track": "Imagine", "artist": "John Lennon"},
+            "track:Imagine artist:John Lennon",
+        ),
+        (
+            {"artist": "The Beatles", "album": "Abbey Road"},
+            "artist:The Beatles album:Abbey Road",
+        ),
+        ({"track": "Yesterday"}, "track:Yesterday"),
+        ({}, ""),
     ],
 )
-def test_construct_query(spotify_service, track, artist, album, expected_query):
-    query = spotify_service._construct_query(track=track, artist=artist, album=album)
+def test_construct_query(spotify_service, input_query, expected_query):
+    input_query = ConstructQueryInput(**input_query)
+    query = spotify_service._construct_query(input_query=input_query)
     assert query == expected_query
 
 
 def test_construct_query_with_special_characters(spotify_service):
-    query = spotify_service._construct_query(track="Don't Stop Me Now", artist="Queen")
+    input_query = ConstructQueryInput(track="Don't Stop Me Now", artist="Queen")
+    query = spotify_service._construct_query(input_query)
     assert query == "track:Don't Stop Me Now artist:Queen"
 
-
 def test_construct_query_case_sensitivity(spotify_service):
-    query1 = spotify_service._construct_query(track="Hello", artist="Adele")
-    query2 = spotify_service._construct_query(track="HELLO", artist="ADELE")
-    assert query1 == query2
-
+    input_query1 = ConstructQueryInput(track="Hello", artist="Adele")
+    input_query2 = ConstructQueryInput(track="HELLO", artist="ADELE")
+    query1 = spotify_service._construct_query(input_query1)
+    query2 = spotify_service._construct_query(input_query2)
+    assert query1 != query2
 
 def test_construct_query_extra_spaces(spotify_service):
-    query = spotify_service._construct_query(
-        track="  Shape of You  ", artist="  Ed Sheeran  "
-    )
-    assert query == "track:Shape of You artist:Ed Sheeran"
+    input_query = ConstructQueryInput(track="  Shape of You  ", artist="  Ed Sheeran  ")
+    query = spotify_service._construct_query(input_query)
+    assert query == "track:  Shape of You   artist:  Ed Sheeran  "

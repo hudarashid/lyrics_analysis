@@ -4,6 +4,7 @@ from SpotifyService.schemas import ConstructQueryInput
 from SpotifyService.spotify_service import (
     SpotifyService,
 )
+from SpotifyService.test_data import CONSTRUCT_QUERY_TEST_CASES
 
 
 @pytest.fixture
@@ -25,29 +26,7 @@ def test_spotify_service_initialization(mock_credentials, mock_spotify):
     mock_spotify.assert_called_once_with(auth_manager=mock_credentials.return_value)
 
 
-@pytest.mark.parametrize(
-    "input_query, expected_query",
-    [
-        (
-            {
-                "track": "Bohemian Rhapsody",
-                "artist": "Queen",
-                "album": "A Night at the Opera",
-            },
-            "track:Bohemian Rhapsody artist:Queen album:A Night at the Opera",
-        ),
-        (
-            {"track": "Imagine", "artist": "John Lennon"},
-            "track:Imagine artist:John Lennon",
-        ),
-        (
-            {"artist": "The Beatles", "album": "Abbey Road"},
-            "artist:The Beatles album:Abbey Road",
-        ),
-        ({"track": "Yesterday"}, "track:Yesterday"),
-        ({}, ""),
-    ],
-)
+@pytest.mark.parametrize("input_query, expected_query", CONSTRUCT_QUERY_TEST_CASES)
 def test_construct_query(spotify_service, input_query, expected_query):
     input_query = ConstructQueryInput(**input_query)
     query = spotify_service._construct_query(input_query=input_query)

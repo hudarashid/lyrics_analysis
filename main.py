@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from datetime import datetime
 from streamlit_card import card
 
-from SpotifyService.schemas import SpotifySearchResult
 from lyrics_service import LyricsService
 from SpotifyService.spotify_service import SpotifyService
 
@@ -56,7 +55,7 @@ if submitted:
         )
 
     else:
-        search_results: List[SpotifySearchResult] = spotify.search(
+        search_results = spotify.search(
             track=track_input, artist=artists_input, album=album_input
         )
 

@@ -10,7 +10,11 @@ from dotenv import load_dotenv
 from spotipy.oauth2 import SpotifyClientCredentials
 from streamlit.logger import get_logger
 
-from SpotifyService.schemas import ConstructQueryInput, SpotifySearchResult
+from SpotifyService.schemas import (
+    ConstructQueryInput,
+    ConvertedSpotifySearchResult,
+    SpotifySearchResult,
+)
 
 LOGGER = get_logger(__file__)
 LOGGER.setLevel(logging.DEBUG)
@@ -46,30 +50,25 @@ class SpotifyService:
 
         return query_string
 
+    def _convert_search_result(
+        self, result: SpotifySearchResult
+    ) -> List[ConvertedSpotifySearchResult]:
+        return [
+            ConvertedSpotifySearchResult.from_spotify_search_result(item)
+            for item in result.tracks.items
+        ]
+
     @st.cache_data
     def search(
         _self, track: str = None, artist: str = None, album: str = None, limit: int = 10
-    ) -> List[SpotifySearchResult]:
-
+    ) -> List[ConvertedSpotifySearchResult]:
         query_input = ConstructQueryInput(track=track, artist=artist, album=album)
-
         query_string = _self._construct_query(query_input)
-        results = _self.sp.search(q=query_string, limit=limit)
 
-        search_results = []
+        raw_results = _self.sp.search(q=query_string, limit=limit)
+        results = SpotifySearchResult.from_dict(raw_results)
 
-        for idx, track in enumerate(results["tracks"]["items"]):
-            artist_names = [artist["name"] for artist in track["artists"]]
-            track_info = SpotifySearchResult(
-                track_name=track["name"],
-                artist=", ".join(artist_names),
-                album_image=track["album"]["images"][0]["url"],
-                id=track["id"],
-            )
-
-            search_results.append(track_info)
-
-        return search_results
+        return _self._convert_search_result(results)
 
     def get_access(dc=None, key=None):
         """Starts session to get access token."""

@@ -1,0 +1,10 @@
+lingua-language-detector ~=2.0.2
+matplotlib ~=3.9.0
+streamlit ~=1.35.0
+streamlit-card ~=1.0.2
+spotipy ~=2.24.0
+python-dotenv ~=1.0.1
+pytest ~=8.3.2
+pydantic ~=2.8.2
+watchdog ~=4.0.1
+wordcloud ~=1.9.3

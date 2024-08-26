@@ -534,7 +534,7 @@ requires-dist = [
     { name = "pytest", specifier = ">=8.3.2" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "spotipy", specifier = ">=2.24.0" },
-    { name = "streamlit", specifier = ">=1.35.0" },
+    { name = "streamlit", specifier = ">=1.37.1" },
     { name = "streamlit-card", specifier = ">=1.0.2" },
     { name = "watchdog", specifier = ">=4.0.1" },
     { name = "wordcloud", specifier = ">=1.9.3" },
